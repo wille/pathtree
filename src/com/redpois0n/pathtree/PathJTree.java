@@ -31,12 +31,18 @@ public class PathJTree extends JTree {
 		this.delimiter = delimiter;
 	}
 	
-	public PathTreeModel getRealModel() {
+	public PathTreeModel getPathModel() {
 		return (PathTreeModel) super.getModel();
 	}
 	
 	public PathTreeNode getSelectedNode() {
 		return getSelectionPath().getLastPathComponent() == null ? null : (PathTreeNode) getSelectionPath().getLastPathComponent();
+	}
+	
+	public void addRoot(DefaultMutableTreeNode root) {
+		setRootVisible(true);
+		getPathModel().addRoot(root);
+		setRootVisible(false);
 	}
 	
 	public void addPathListener(PathListener l) {
@@ -55,6 +61,12 @@ public class PathJTree extends JTree {
 		this.delimiter = delimiter;
 	}
 	
+	public void expandAll() {
+		for (int i = 0; i < getRowCount(); i++) {
+			expandRow(i);
+		}
+	}
+
 	public class ClickListener implements MouseListener {
 
 		@Override
@@ -96,7 +108,7 @@ public class PathJTree extends JTree {
 		String path = "";
 		
 		for (Object obj : p.getPath()) {
-			if (obj instanceof PathTreeNode && obj != getRealModel().getRootNode()) {
+			if (obj instanceof PathTreeNode && obj != getPathModel().getRootNode()) {
 				PathTreeNode node = (PathTreeNode) obj;
 				path += node.toString() + delimiter;
 			}
@@ -110,8 +122,8 @@ public class PathJTree extends JTree {
 	}
 	
 	public TreeNode getNodeFromPath(String path) {		
-		for (int i = 0; i < super.getRowCount(); i++) {
-			TreePath treePath = super.getPathForRow(i);
+		for (int i = 0; i < getRowCount(); i++) {
+			TreePath treePath = getPathForRow(i);
 			String mpath = makePath(treePath);
 
 			if (mpath.equalsIgnoreCase(path)) {
@@ -124,7 +136,7 @@ public class PathJTree extends JTree {
 	
 	@SuppressWarnings("unchecked")
 	public boolean exists(String s) {
-	    Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) getRealModel().getRootNode()).depthFirstEnumeration();
+	    Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) getPathModel().getRootNode()).depthFirstEnumeration();
 	    while (e.hasMoreElements()) {
 	        DefaultMutableTreeNode node = e.nextElement();
 	        String path = makePath(new TreePath(node.getPath()));

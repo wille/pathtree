@@ -9,6 +9,12 @@ public class PathTreeNode extends DefaultMutableTreeNode {
 	private String text;
 	private Icon icon;
 	
+	public PathTreeNode(String s) {
+		super(s);
+		this.text = s;
+		this.icon = null;
+	}
+	
 	public PathTreeNode(String s, Icon icon) {
 		super(s);
 		this.text = s;
