@@ -81,7 +81,9 @@ public class FileJTree extends PathJTree {
 			
 			if (d.isDirectory()) {
 				node = new FolderTreeNode(name, icon);
-				insertFakeNode(node);
+				if (d.listFiles().length > 0) {
+					insertFakeNode(node);
+				}
 			} else {
 				node = new FileTreeNode(name, icon);
 			}
