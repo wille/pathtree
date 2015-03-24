@@ -129,17 +129,21 @@ public class PathJTree extends JTree {
 		return path;
 	}
 	
-	public TreeNode getNodeFromPath(String path) {		
+	public PathTreeNode getNodeFromPath(String path) {		
 		for (int i = 0; i < getRowCount(); i++) {
 			TreePath treePath = getPathForRow(i);
 			String mpath = makePath(treePath);
 
 			if (mpath.equalsIgnoreCase(path)) {
-				return (TreeNode) treePath.getLastPathComponent();
+				return (PathTreeNode) treePath.getLastPathComponent();
 			}
 		}
 		
 		return null;
+	}
+
+	public void insertFakeNode(PathTreeNode insertedNode) {
+		getPathModel().insertNodeInto(new PlaceHolderTreeNode(), insertedNode, 0);		
 	}
 	
 	@SuppressWarnings("unchecked")
