@@ -33,6 +33,7 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
 		super.setShowsRootHandles(true);
 		super.setCellRenderer(new PathTreeRenderer());
 		super.addTreeExpansionListener(this);
+		super.addMouseListener(this);
 		this.delimiter = delimiter;
 	}
 	
