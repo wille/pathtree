@@ -70,6 +70,16 @@ public class PathJTree extends JTree {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 		    TreePath tp = PathJTree.this.getPathForLocation(e.getX(), e.getY());
+		    if (tp != null && tp.getLastPathComponent() != null) {
+		    	DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
+			    
+			    for (int i = 0; i < node.getChildCount(); i++) {
+			    	DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
+			    	if (n instanceof PlaceHolderTreeNode) {
+			    		getPathModel().removeNodeFromParent(n);
+			    	}
+			    }
+		    }
 
 		    if (tp != null) {
 		    	String path = PathJTree.this.makePath(tp);
