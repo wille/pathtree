@@ -13,20 +13,25 @@ public class FileJTree extends PathJTree {
 
 	public FileJTree() {
 		setDelimiter(File.separator);
-		addPathListener(new PathListener() {
+		addLeafClickListener(new LeafClickListener() {
 			@Override
-			public void pathSelected(String path) {
+			public void itemSelected(String path) {
 				File file = new File(path);
-				
-				if (file.isDirectory()) {
-					update(file, null);
-				} else {
-					try {
-						Desktop.getDesktop().open(file);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+
+				try {
+					Desktop.getDesktop().open(file);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			}
+		});
+		
+		addFolderClickListener(new FolderClickListener() {
+			@Override
+			public void itemSelected(String path) {
+				File file = new File(path);
+
+				update(file, null);
 			}
 		});
 	}

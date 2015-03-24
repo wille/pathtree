@@ -1,5 +1,7 @@
 package com.redpois0n.pathtree;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -7,16 +9,19 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
-public class PathJTree extends JTree {
+public class PathJTree extends JTree implements TreeExpansionListener, MouseListener {
 	
-	private final List<PathListener> listeners = new ArrayList<PathListener>();
-	
+	private final List<LeafClickListener> leafListeners = new ArrayList<LeafClickListener>();
+	private final List<FolderClickListener> folderListeners = new ArrayList<FolderClickListener>();
+
 	private String delimiter;
 
 	public PathJTree() {
@@ -27,7 +32,7 @@ public class PathJTree extends JTree {
 		super(model);
 		super.setShowsRootHandles(true);
 		super.setCellRenderer(new PathTreeRenderer());
-		super.addMouseListener(new ClickListener());
+		super.addTreeExpansionListener(this);
 		this.delimiter = delimiter;
 	}
 	
@@ -43,12 +48,20 @@ public class PathJTree extends JTree {
 		getPathModel().addRoot(root);
 	}
 	
-	public void addPathListener(PathListener l) {
-		listeners.add(l);
+	public void addLeafClickListener(LeafClickListener l) {
+		leafListeners.add(l);
 	}
 	
-	public void remotePathListener(PathListener l) {
-		listeners.remove(l);
+	public void remotePathListener(LeafClickListener l) {
+		leafListeners.remove(l);
+	}
+	
+	public void addFolderClickListener(FolderClickListener l) {
+		folderListeners.add(l);
+	}
+	
+	public void removeFolderClickListener(FolderClickListener l) {
+		folderListeners.remove(l);
 	}
 	
 	public String getDelimiter() {
@@ -63,53 +76,6 @@ public class PathJTree extends JTree {
 		for (int i = 0; i < getRowCount(); i++) {
 			expandRow(i);
 		}
-	}
-
-	public class ClickListener implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-		    TreePath tp = PathJTree.this.getPathForLocation(e.getX(), e.getY());
-		    if (tp != null && tp.getLastPathComponent() != null) {
-		    	DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
-			    
-			    for (int i = 0; i < node.getChildCount(); i++) {
-			    	DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
-			    	if (n instanceof PlaceHolderTreeNode) {
-			    		getPathModel().removeNodeFromParent(n);
-			    	}
-			    }
-		    }
-
-		    if (tp != null) {
-		    	String path = PathJTree.this.makePath(tp);
-		    	
-		    	for (PathListener l : listeners) {
-		    		l.pathSelected(path);
-		    	}
-		    }
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			
-		}
-		
 	}
 	
 	public String makePath(TreePath p) {
@@ -157,5 +123,78 @@ public class PathJTree extends JTree {
 	        }
 	    }
 	    return false;
+	}
+
+	@Override
+	public void treeExpanded(TreeExpansionEvent event) {
+		TreePath tp = event.getPath();
+
+		if (tp != null && tp.getLastPathComponent() != null) {
+	    	DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
+		    
+		    for (int i = 0; i < node.getChildCount(); i++) {
+		    	DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
+		    	if (n instanceof PlaceHolderTreeNode) {
+		    		getPathModel().removeNodeFromParent(n);
+		    	}
+		    }
+	    }
+
+	    if (tp != null) {
+	    	String path = PathJTree.this.makePath(tp);
+	    	
+	    	for (FolderClickListener l : folderListeners) {
+	    		l.itemSelected(path);
+	    	}
+	    }
+	}
+
+	@Override
+	public void treeCollapsed(TreeExpansionEvent event) {
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		TreePath tp = PathJTree.this.getPathForLocation(e.getX(), e.getY());
+
+        if (tp != null && tp.getLastPathComponent() != null) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
+            
+            for (int i = 0; i < node.getChildCount(); i++) {
+                DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
+                if (n instanceof PlaceHolderTreeNode) {
+                    getPathModel().removeNodeFromParent(n);
+                }
+            }
+        }
+
+        if (tp != null && ((PathTreeNode) tp.getLastPathComponent()).isLeaf()) {
+            String path = PathJTree.this.makePath(tp);
+            
+            for (LeafClickListener l : leafListeners) {
+        		l.itemSelected(path);
+        	}	
+        }		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		
 	}
 }
