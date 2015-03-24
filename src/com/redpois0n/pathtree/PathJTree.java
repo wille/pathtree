@@ -40,9 +40,7 @@ public class PathJTree extends JTree {
 	}
 	
 	public void addRoot(DefaultMutableTreeNode root) {
-		setRootVisible(true);
 		getPathModel().addRoot(root);
-		setRootVisible(false);
 	}
 	
 	public void addPathListener(PathListener l) {
