@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 @SuppressWarnings("serial")
 public class PathJTree extends JTree {
 	
-	private static final List<PathListener> listeners = new ArrayList<PathListener>();
+	private final List<PathListener> listeners = new ArrayList<PathListener>();
 	
 	private String delimiter;
 
