@@ -4,7 +4,7 @@ import javax.swing.Icon;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 @SuppressWarnings("serial")
-public class PathTreeNode extends DefaultMutableTreeNode {
+public abstract class PathTreeNode extends DefaultMutableTreeNode {
 	
 	private String text;
 	private Icon icon;

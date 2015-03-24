@@ -38,7 +38,7 @@ public class FileJTree extends PathJTree {
 	
 	public void add(String dir, ImageIcon icon) {
 		setRootVisible(true);
-		PathTreeNode root = new PathTreeNode(dir, icon);
+		PathTreeNode root = new FolderTreeNode(dir, icon);
 		addRoot(root);
 		update(new File(dir), root);
 		expandRow(0);
@@ -77,12 +77,16 @@ public class FileJTree extends PathJTree {
 			
 			Icon icon = FileIconUtils.getIconFromFile(d);
 			
-			PathTreeNode node = new PathTreeNode(name, icon);
-			getPathModel().insertNodeInto(node, parent, parent.getChildCount());		
+			PathTreeNode node;
 			
 			if (d.isDirectory()) {
+				node = new FolderTreeNode(name, icon);
 				insertFakeNode(node);
+			} else {
+				node = new FileTreeNode(name, icon);
 			}
+			
+			getPathModel().insertNodeInto(node, parent, parent.getChildCount());		
 		}				
 	}
 

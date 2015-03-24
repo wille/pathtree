@@ -1,7 +1,5 @@
 package com.redpois0n.pathtree;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
@@ -25,7 +22,7 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
 	private String delimiter;
 
 	public PathJTree() {
-		this(new PathTreeModel(new PathTreeNode("root", null)), "/");
+		this(new PathTreeModel(new FolderTreeNode("root", null)), "/");
 	}
 	
 	public PathJTree(TreeModel model, String delimiter) {
@@ -170,13 +167,19 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
             }
         }
 
-        if (tp != null && ((PathTreeNode) tp.getLastPathComponent()).isLeaf()) {
+        if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode) {
             String path = PathJTree.this.makePath(tp);
             
             for (LeafClickListener l : leafListeners) {
         		l.itemSelected(path);
         	}	
-        }		
+        } else if (tp != null && tp.getLastPathComponent() instanceof FolderTreeNode) {
+            String path = PathJTree.this.makePath(tp);
+
+        	for (FolderClickListener l : folderListeners) {
+	    		l.itemSelected(path);
+	    	}
+        }
 	}
 
 	@Override
