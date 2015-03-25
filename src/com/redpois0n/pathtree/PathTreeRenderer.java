@@ -23,11 +23,7 @@ public class PathTreeRenderer extends DefaultTreeCellRenderer {
 			if (text.contains(File.separator)) {
 				String name = text;
 				
-				if (name.endsWith(".")) {
-					name = name.substring(0, name.length() - 1);
-				}
-				
-				if (name.endsWith(File.separator)) {
+				if (name.endsWith(".") || name.endsWith(File.separator)) {
 					name = name.substring(0, name.length() - 1);
 				}
 				
