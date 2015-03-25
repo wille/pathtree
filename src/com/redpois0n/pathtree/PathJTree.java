@@ -167,7 +167,7 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
             }
         }
 
-        if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode) {
+        if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode && e.getClickCount() == 2) {
             String path = PathJTree.this.makePath(tp);
             
             for (LeafClickListener l : leafListeners) {
