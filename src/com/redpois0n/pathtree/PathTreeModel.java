@@ -15,7 +15,7 @@ public class PathTreeModel extends DefaultTreeModel {
 	}
 
 	public void addRoot(DefaultMutableTreeNode root) {
-		super.insertNodeInto(root, (DefaultMutableTreeNode) rootNode, 0);
+		super.insertNodeInto(root, (DefaultMutableTreeNode) rootNode, rootNode.getChildCount());
 	}
 	
 	public void removeRoot(DefaultMutableTreeNode root) {
