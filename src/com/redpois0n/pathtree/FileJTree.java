@@ -12,19 +12,26 @@ import javax.swing.ImageIcon;
 public class FileJTree extends PathJTree {
 
 	public FileJTree() {
+		this(true);
+	}
+	
+	public FileJTree(boolean openFile) {
 		setDelimiter(File.separator);
-		addLeafClickListener(new LeafClickListener() {
-			@Override
-			public void itemSelected(String path) {
-				File file = new File(path);
+		
+		if (openFile) {
+			addLeafClickListener(new LeafClickListener() {
+				@Override
+				public void itemSelected(String path) {
+					File file = new File(path);
 
-				try {
-					Desktop.getDesktop().open(file);
-				} catch (Exception e) {
-					e.printStackTrace();
+					try {
+						Desktop.getDesktop().open(file);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
+			});
+		}
 		
 		addFolderClickListener(new FolderClickListener() {
 			@Override
