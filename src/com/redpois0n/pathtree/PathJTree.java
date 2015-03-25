@@ -154,32 +154,34 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		TreePath tp = PathJTree.this.getPathForLocation(e.getX(), e.getY());
+		if(e.getClickCount() == 2) {
+			TreePath tp = PathJTree.this.getPathForLocation(e.getX(), e.getY());
 
-        if (tp != null && tp.getLastPathComponent() != null) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
-            
-            for (int i = 0; i < node.getChildCount(); i++) {
-                DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
-                if (n instanceof PlaceHolderTreeNode) {
-                    getPathModel().removeNodeFromParent(n);
-                }
-            }
-        }
-
-        if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode) {
-            String path = PathJTree.this.makePath(tp);
-            
-            for (LeafClickListener l : leafListeners) {
-        		l.itemSelected(path);
-        	}	
-        } else if (tp != null && tp.getLastPathComponent() instanceof FolderTreeNode) {
-            String path = PathJTree.this.makePath(tp);
-
-        	for (FolderClickListener l : folderListeners) {
-	    		l.itemSelected(path);
-	    	}
-        }
+		        if (tp != null && tp.getLastPathComponent() != null) {
+		            DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
+		            
+		            for (int i = 0; i < node.getChildCount(); i++) {
+		                DefaultMutableTreeNode n = (DefaultMutableTreeNode) node.getChildAt(i);
+		                if (n instanceof PlaceHolderTreeNode) {
+		                    getPathModel().removeNodeFromParent(n);
+		                }
+		            }
+		        }
+		
+		        if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode) {
+		            String path = PathJTree.this.makePath(tp);
+		            
+		            for (LeafClickListener l : leafListeners) {
+		        		l.itemSelected(path);
+		        	}	
+		        } else if (tp != null && tp.getLastPathComponent() instanceof FolderTreeNode) {
+		            String path = PathJTree.this.makePath(tp);
+		
+		        	for (FolderClickListener l : folderListeners) {
+			    		l.itemSelected(path);
+			    	}
+		        }
+		}
 	}
 
 	@Override
