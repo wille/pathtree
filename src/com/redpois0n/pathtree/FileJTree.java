@@ -19,9 +19,9 @@ public class FileJTree extends PathJTree {
 		setDelimiter(File.separator);
 		
 		if (openFile) {
-			addLeafClickListener(new LeafClickListener() {
+			addFileClickListener(new NodeClickListener() {
 				@Override
-				public void itemSelected(String path) {
+				public void itemSelected(PathTreeNode node, String path) {
 					File file = new File(path);
 
 					try {
@@ -33,9 +33,9 @@ public class FileJTree extends PathJTree {
 			});
 		}
 		
-		addFolderClickListener(new FolderClickListener() {
+		addFolderClickListener(new NodeClickListener() {
 			@Override
-			public void itemSelected(String path) {
+			public void itemSelected(PathTreeNode node, String path) {
 				File file = new File(path);
 
 				update(file, null);

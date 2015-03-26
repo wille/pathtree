@@ -16,8 +16,8 @@ import javax.swing.tree.TreePath;
 @SuppressWarnings("serial")
 public class PathJTree extends JTree implements TreeExpansionListener, MouseListener {
 	
-	private final List<LeafClickListener> leafListeners = new ArrayList<LeafClickListener>();
-	private final List<FolderClickListener> folderListeners = new ArrayList<FolderClickListener>();
+	private final List<NodeClickListener> leafListeners = new ArrayList<NodeClickListener>();
+	private final List<NodeClickListener> folderListeners = new ArrayList<NodeClickListener>();
 
 	private String delimiter;
 
@@ -46,19 +46,19 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
 		getPathModel().addRoot(root);
 	}
 	
-	public void addLeafClickListener(LeafClickListener l) {
+	public void addFileClickListener(NodeClickListener l) {
 		leafListeners.add(l);
 	}
 	
-	public void remotePathListener(LeafClickListener l) {
+	public void remoteFileClickListener(NodeClickListener l) {
 		leafListeners.remove(l);
 	}
 	
-	public void addFolderClickListener(FolderClickListener l) {
+	public void addFolderClickListener(NodeClickListener l) {
 		folderListeners.add(l);
 	}
 	
-	public void removeFolderClickListener(FolderClickListener l) {
+	public void removeFolderClickListener(NodeClickListener l) {
 		folderListeners.remove(l);
 	}
 	
@@ -141,8 +141,8 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
 	    if (tp != null) {
 	    	String path = PathJTree.this.makePath(tp);
 	    	
-	    	for (FolderClickListener l : folderListeners) {
-	    		l.itemSelected(path);
+	    	for (NodeClickListener l : folderListeners) {
+	    		l.itemSelected((PathTreeNode) tp.getLastPathComponent(), path);
 	    	}
 	    }
 	}
@@ -170,14 +170,14 @@ public class PathJTree extends JTree implements TreeExpansionListener, MouseList
         if (tp != null && tp.getLastPathComponent() instanceof FileTreeNode && e.getClickCount() == 2) {
             String path = PathJTree.this.makePath(tp);
             
-            for (LeafClickListener l : leafListeners) {
-        		l.itemSelected(path);
+            for (NodeClickListener l : leafListeners) {
+	    		l.itemSelected((PathTreeNode) tp.getLastPathComponent(), path);
         	}	
         } else if (tp != null && tp.getLastPathComponent() instanceof FolderTreeNode) {
             String path = PathJTree.this.makePath(tp);
 
-        	for (FolderClickListener l : folderListeners) {
-	    		l.itemSelected(path);
+        	for (NodeClickListener l : folderListeners) {
+	    		l.itemSelected((PathTreeNode) tp.getLastPathComponent(), path);
 	    	}
         }
 	}
