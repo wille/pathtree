@@ -1,5 +1,7 @@
 package com.redpois0n.pathtree;
 
+import iconlib.FileIconUtils;
+
 import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
