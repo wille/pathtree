@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 
 @SuppressWarnings("serial")
 public class FileJTree extends PathJTree {
+	
+	private FileFilter filter;
 
 	public FileJTree() {
 		this(true);
@@ -44,7 +46,7 @@ public class FileJTree extends PathJTree {
 			}
 		});
 	}
-	
+
 	public void add(String dir, ImageIcon icon) {
 		setRootVisible(true);
 		PathTreeNode root = new FolderTreeNode(dir, icon);
@@ -60,6 +62,10 @@ public class FileJTree extends PathJTree {
 		
 		if (dir.isDirectory()) {
 			for (File file : dir.listFiles()) {
+				if (filter != null && !filter.allow(file)) {
+					continue;
+				}
+				
 				if (file.isDirectory()) {					
 					dirs.add(file);
 				} else {
@@ -99,6 +105,14 @@ public class FileJTree extends PathJTree {
 			
 			getPathModel().insertNodeInto(node, parent, parent.getChildCount());		
 		}				
+	}
+
+	public FileFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(FileFilter filter) {
+		this.filter = filter;
 	}
 
 }
